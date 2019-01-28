@@ -3,6 +3,7 @@
 
 '''
 Override configurations.
+config_override.py作为生产环境的标准配置
 '''
 
 __author__ = 'Michael Liao'
