@@ -4,6 +4,7 @@
 __author__ = 'Michael Liao'
 
 import asyncio, os, inspect, logging, functools
+import handlers
 
 from urllib import parse
 
@@ -156,8 +157,10 @@ def add_route(app, fn):
     app.router.add_route(method, path, RequestHandler(app, fn))
 
 def add_routes(app, module_name):
-    n = module_name.rfind('.')
+    n = module_name.rfind('.')#Python rfind() 返回字符串最后一次出现的位置(从右向左查询)，如果没有匹配项则返回-1
     if n == (-1):
+        #__import__() 函数用于动态加载类和函数 。
+        #如果一个模块经常变化就可以使用 __import__() 来动态载入
         mod = __import__(module_name, globals(), locals())
     else:
         name = module_name[n+1:]
