@@ -4,7 +4,7 @@
 __author__ = 'Michael Liao'
 
 import asyncio, os, inspect, logging, functools
-import handlers
+#import handlers
 
 from urllib import parse
 
