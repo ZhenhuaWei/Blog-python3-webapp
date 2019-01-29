@@ -22,7 +22,7 @@ from models import User, Comment, Blog, next_id
 #         'users': users
 # }
 
-COOKIE_NAME = 'aweseession'
+COOKIE_NAME = 'awesession'
 _COOKIE_KEY = configs.session.secret
 
 def user2cookie(user, max_age):
