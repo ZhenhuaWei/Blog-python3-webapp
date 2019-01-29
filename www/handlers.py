@@ -74,6 +74,19 @@ def index(request):
         'blogs': blogs
     }
 
+@get('/blog/{id}')
+async def get_blog(id):
+    blog = await Blog.find(id)
+    comments = await Comment.findAll('blog_id=?', [id], orderBy='created_at desc')
+    for c in comments:
+        c.html_content = text2html(c.content)
+    blog.html_content = markdown2.markdown(blog.content)#blog如果返回的是None需要处理
+    return {
+        '__template__': 'blog.html',
+        'blog': blog,
+        'comments': comments
+    }
+
 
 @get('/register')
 def register():
@@ -145,3 +158,22 @@ async def api_register_user(*, email, name, passwd):
     r.content_type = 'application/json'
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
     return r
+
+
+@get('/api/blogs/{id}')
+async def api_get_blog(*, id):
+    blog = await Blog.find(id)
+    return blog
+
+@post('/api/blogs')
+async def api_create_blog(request, *, name, summary, content):
+    check_admin(request)
+    if not name or not name.strip():
+        raise APIValueError('name', 'name cannot be empty.')
+    if not summary or not summary.strip():
+        raise APIValueError('summary', 'summary cannot be empty.')
+    if not content or not content.strip():
+        raise APIValueError('content', 'content cannot be empty.')
+    blog = Blog(user_id=request.__user__.id, user_name=request.__user__.name, user_image=request.__user__.image, name=name.strip(), summary=summary.strip(), content=content.strip())
+    await blog.save()
+    return blog
