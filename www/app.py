@@ -50,7 +50,7 @@ def logger_factory(app, handler):
         logging.info('Request: %s %s' % (request.method, request.path))
         # yield from asyncio.sleep(0.3)
         return (yield from handler(request))
-    return logger
+    return logger 
 
 @asyncio.coroutine
 def auth_factory(app, handler):
